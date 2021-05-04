@@ -38,17 +38,16 @@ class ProductSerializer2(serializers.Serializer):
     def create(self, validated_data):
         return Category.objects.create(**validated_data)
 
-# Serializers define the API representation.
-# class CategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Category
-#         fields = ['id', 'name', 'icon', 'sort_order']
-
 
 class ProductListSerializer(serializers.ListSerializer):
     def create(self, validated_data):
         books = [Product(**item) for item in validated_data]
         return Product.objects.bulk_create(books)
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'icon', 'sort_order']
 
 class ProductSerializer(serializers.Serializer):
 
