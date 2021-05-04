@@ -8,6 +8,44 @@ from catalog.models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
 
 
+class CategoryView(APIView):
+
+    def get(self, request, format=None):
+
+        category = get_object_or_404(Category, id=3)
+        serializer = CategorySerializer(category)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        category = serializer.create(serializer.data)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
+
+
+class ProductView(APIView):
+
+    def get(self, request, format=None):
+
+        product = Product.objects.all()
+        serializer = ProductSerializer(product)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        category = serializer.create(serializer.data)
+        serializer = ProductSerializer(category)
+        return Response(serializer.data)
+
+class ListProduct(generics.ListAPIView, generics.CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    parser_classes  = [JSONParser]
+
 class ListCategories(generics.ListAPIView, generics.CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
